@@ -6,7 +6,7 @@ namespace BlogSite_API.Helpers
 {
     public class JwtService
     {
-        private string secureKey = "this is a very secure key";
+        private string secureKey = "this is a very secure key that could work or maybe needs to change";
         public string Generate(int id)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secureKey));
