@@ -4,7 +4,7 @@ using BlogSite_API.Models;
 
 namespace BlogSite_API.Controllers
 {
-    [Route("api/BlogItems")]
+    [Route("api/blog")]
     [ApiController]
     public class BlogItemsController : ControllerBase
     {
@@ -16,14 +16,14 @@ namespace BlogSite_API.Controllers
         }
 
         // GET: api/BlogItems
-        [HttpGet]
+        [HttpGet("get-all")]
         public async Task<ActionResult<IEnumerable<BlogItem>>> GetBlogItems()
         {
             return await _context.BlogItems.ToListAsync();
         }
 
         // GET: api/BlogItems/5
-        [HttpGet("{id}")]
+        [HttpGet("get-by-id/{id}")]
         public async Task<ActionResult<BlogItem>> GetBlogItem(int id)
         {
             var blogItem = await _context.BlogItems.FindAsync(id);
@@ -36,9 +36,23 @@ namespace BlogSite_API.Controllers
             return blogItem;
         }
 
+        // GET: api/BlogItems/username
+        [HttpGet("get-by-user/{username}")]
+        public async Task<ActionResult<IEnumerable<BlogItem>>> GetBlogItemsByUser(string username)
+        {
+            var blogItem = await _context.BlogItems.Where(u => u.Author == username).ToListAsync();
+
+            if (blogItem == null)
+            {
+                return NotFound();
+            }
+
+            return blogItem;
+        }
+
         // PUT: api/BlogItems/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPut("update/{id}")]
         public async Task<IActionResult> PutBlogItem(int id, BlogItem blogItem)
         {
             if (id != blogItem.Id)
@@ -69,7 +83,7 @@ namespace BlogSite_API.Controllers
 
         // POST: api/BlogItems
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
+        [HttpPost("create")]
         public async Task<ActionResult<BlogItem>> PostBlogItem(BlogItem blogItem)
         {
             _context.BlogItems.Add(blogItem);
@@ -79,7 +93,7 @@ namespace BlogSite_API.Controllers
         }
 
         // DELETE: api/BlogItems/5
-        [HttpDelete("{id}")]
+        [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteBlogItem(int id)
         {
             var blogItem = await _context.BlogItems.FindAsync(id);
